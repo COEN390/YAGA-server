@@ -2,7 +2,7 @@
 import { insertProduct } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxScraper.mjs";
 
-
+// testing
 const getProduct = (req, res) => {
 
     return res.status(201).json({ message : 'role is created'})
@@ -19,11 +19,13 @@ const addProduct = (req, res) => {
     console.log(barcode)
     maxiScraper(barcode).then( result => {
 
+        // Todo
+        // insert the result to db
         console.log(result)
     })
 
 
-    return res.status(201).json({ message : 'role is created'})
+    return res.status(200).json({ message : 'barcode received'})
 }
 
 
