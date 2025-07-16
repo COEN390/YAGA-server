@@ -1,19 +1,37 @@
 import express from "express"
 import productRoutes from "./routes/ProductRoutes.mjs"
 import bodyparser from "body-parser"
+import WebSocket, { WebSocketServer } from 'ws';
+import { connection } from "./helpers/webSocket.mjs";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-const app = express()
-const port = 3000
+const express_port = 3000
+const wss_port = 8080
 
+
+
+// Rest API setup ( express js )
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+const app = express()
 
 app.use(bodyparser.json())
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Used for barcode scanner
 app.use("/api/product", productRoutes)
 
-
-
-app.listen(port,'0.0.0.0', () => {
-  console.log(`Example app listening on port ${port}`)
+app.listen(express_port,'0.0.0.0', () => {
+  console.log(`Web API listening on port ${express_port}`)
 })
+
+
+
+// Web socket setup
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+const wss = new WebSocketServer({ port : wss_port})
+
+wss.on('connection', (ws, wss) => {
+  console.log(`Web socket server listening on port ${wss_port}`)
+  connection(ws, wss)
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////

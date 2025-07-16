@@ -12,9 +12,11 @@ const addProduct = (req, res) => {
 
     let { barcode } = req.body;
 
-    if (barcode.length == 13) {
-        barcode = barcode.slice(1);
-    }
+    // Todo
+    // find if i need to remove extra zero or not
+    // if (barcode.length == 13) {
+    //     barcode = barcode.slice(1);
+    // }
 
     console.log(barcode)
     maxiScraper(barcode).then( result => {
