@@ -1,3 +1,5 @@
+import { getProducts } from "./db.mjs";
+import { maxiScraper } from "./maxScraper.mjs";
 
 
 const message = (ws, msg, wss) => {
@@ -13,9 +15,28 @@ const connection = (ws, wss) => {
     ws.on('message', (msg) => message(ws, msg, wss));
   
     ws.on('close', close);
-  
-    ws.send('Welcome from server!');
+    
+
+    scraper_routin(ws,wss)
 };
+
+const scraper_routin = async (ws, wss) => {
+    const productRow = await getProducts()
+    while(true) {
+        console.log(productRow)
+        for (const element of productRow) {
+            console.log(element)
+            const data = await maxiScraper(element.name)
+            console.log(data)
+            console.log("meow")
+            if (data != null) {
+                ws.send(data.title)
+                ws.send(data.price)
+                ws.send(data.price)
+            }
+        }
+    }
+}
 
 
 export { connection }

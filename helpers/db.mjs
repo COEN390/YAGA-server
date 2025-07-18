@@ -25,11 +25,24 @@ const insertProduct = (name, price, img) => {
 
     const db = getDB()
 
-    db.run(`INSERT INTO products (name, price, img) VALUES (?, ?)`, [name, price, img], function(err) {
+    console.log("meow")
+    db.run(`INSERT INTO products (name, price, img) VALUES (?, ?, ?)`, [name, price, img], (err) => {
         console.log("fuuuuuck")
         console.log(err)
     });
 
 }
-
-export { insertProduct }
+const getProducts = () => {
+  const db = getDB();
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM products`, (err, rows) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+};
+export { insertProduct, getProducts }

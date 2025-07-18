@@ -24,7 +24,12 @@ const addProduct = (req, res) => {
         // Todo
         // insert the result to db
         console.log(result)
+
+        insertProduct(result.title, result.price, result.img)
     })
+
+
+    
 
 
     return res.status(200).json({ message : 'barcode received'})
