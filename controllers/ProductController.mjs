@@ -31,7 +31,8 @@ const addProduct = (req, res) => {
         }
     })
 
-    supercScraper(barcode).then( result => {
+    const barcode12 = barcode.slice(1);
+    supercScraper(barcode12).then( result => {
         console.log(result)
         if (result != null) {
             insertProduct(result.title, result.price, result.img)

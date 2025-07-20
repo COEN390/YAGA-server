@@ -1,41 +1,64 @@
-// supercScraper.mjs
+// Testing for SuperC scraper, to be put into a function which can be called with a barcode.
 import { getBrowser } from './setupBrowser.mjs';
 
-// Main function to scrape SuperC by barcode --> ensure barcode is 12 digits
-// Returns an object with title, price, and image URL
+// Main async function to scrape one product from Super C using the barcode
 async function supercScraper(barcode) {
-    const { browser, context } = await getBrowser();
-    const page = await context.newPage();
+  // Launch a Chromium browser instance (headless mode true for production, false for debugging)
+  const { browser, context } = await getBrowser()
+  const page = await context.newPage();
 
-    // Navigate to SuperC's search page with the barcode
-    await page.goto(`https://www.superc.ca/en/search?filter=${barcode}`, { waitUntil: 'domcontentloaded' });
+  // Construct the Super C search URL with the given barcode
+  const url = `https://www.superc.ca/en/search?filter=${barcode}`;
 
-    // Try to get the first product card
-    const firstProduct = await page.$('div.product-tile');
+  // Navigate to the URL and wait until the network is idle (no more loading)
+  await page.goto(url, { waitUntil: 'networkidle' });
 
-    if (!firstProduct) {
-        console.log("No product found on SuperC for this barcode.");
-        return null;
-    }
+  // Wait for at least one product tile to appear in the results
+  await page.waitForSelector('div.default-product-tile');
 
-    // Extract product details
-    const img = await firstProduct.$eval("img", el => el.getAttribute("src"));
-    const title = await firstProduct.$eval("h3", el => el.innerText.trim());
+  // Select the first product tile on the page
+  const product = await page.$('div.default-product-tile');
 
-    // Extract price (sale price if available, else regular)
-    let price = null;
-    try {
-        price = await firstProduct.$eval("div.price__sales", el => el.innerText.trim());
-    } catch {
-        try {
-            price = await firstProduct.$eval("div.price__regular", el => el.innerText.trim());
-        } catch {
-            console.log("No price found for product.");
-            return null;
-        }
-    }
+  // If no product is found (unexpected barcode or network issue), exit early
+  if (!product) {
+    console.log("❌ No product found for this barcode.");
+    await browser.close();
+    return;
+  }
 
-    return { title, price, img };
+  // Extract the image source as a url
+  const img = await product
+    .$eval('img', img => img.getAttribute('src'))
+    .catch(() => 'No image'); // If no image is found, return 'No image'
+
+  // Extract the product title text
+  const title = await product
+    .$eval('.head__title', el => el.innerText.trim())
+    .catch(() => 'No title'); // If no title is found, return 'No title' --> not a good sign, should maybe exit early if no title.
+
+  // Try to extract sale price first
+  // If sale price is missing, fall back to regular price
+  // If both are missing, return "No price" --> Should never happen, but just in case
+  const price =
+    (await product
+      .$eval('.pricing__sale-price', el => el.innerText.trim())
+      .catch(() => null)) || // Try sale price, fallback to null
+    (await product
+      .$eval('.pricing__regular-price', el => el.innerText.trim())
+      .catch(() => 'No price')); // If sale price fails, try regular price
+
+  // Print the result nicely for testing
+  console.log("🛒", title);
+  console.log("💰", price);
+  console.log("🖼️", img);
+  console.log("🔗", url);
+
+  
+
+  // Close the browser when done
+  await browser.close();
+  
+  return {title, price, img};
 }
 
 export { supercScraper };
