@@ -3,11 +3,16 @@ import productRoutes from "./routes/ProductRoutes.mjs"
 import bodyparser from "body-parser"
 import WebSocket, { WebSocketServer } from 'ws';
 import { connection } from "./helpers/webSocket.mjs";
+import { createDB } from "./helpers/db.mjs";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 const express_port = 3000
 const wss_port = 8080
 
+
+// DB
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+createDB()
 
 
 // Rest API setup ( express js )

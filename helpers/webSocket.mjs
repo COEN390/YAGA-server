@@ -1,4 +1,4 @@
-import { getProducts } from "./db.mjs";
+import { getAllBarcodes } from "./db.mjs";
 import { maxiScraper } from "./maxScraper.mjs";
 
 
@@ -21,7 +21,7 @@ const connection = (ws, wss) => {
 };
 
 const scraper_routin = async (ws, wss) => {
-    const productRow = await getProducts()
+    const productRow = await getAllBarcodes()
     while(true) {
         console.log(productRow)
         for (const element of productRow) {

@@ -1,33 +1,34 @@
 
-import { insertProduct } from "../helpers/db.mjs";
+import { insertBarcode, insertMaxi, insertSuperC } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxScraper.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
 
 // testing
 const getProduct = (req, res) => {
-
     return res.status(201).json({ message : 'role is created'})
 }
 
-const addProduct = (req, res) => {
+const addProduct = async (req, res) => {
 
     // Todo!!!
     // need to make sure it is not fucked
     let { barcode } = req.body;
 
-    // Todo
-    // find if i need to remove extra zero or not
-    // if (barcode.length == 13) {
-    //     barcode = barcode.slice(1);
-    // }
+    let id;
 
-    console.log(barcode)
+    try {
+        id = await insertBarcode(barcode)
+    }
+    catch (e) {
+        return res.status(200).json({ message : 'barcode is already registered' })
+    }   
+
     maxiScraper(barcode).then( result => {
 
         console.log(result)
 
         if (result != null) {
-            insertProduct(result.title, result.price, result.img)
+            insertMaxi(result.title, result.price, result.img, id)
         }
     })
 
@@ -35,11 +36,9 @@ const addProduct = (req, res) => {
     supercScraper(barcode12).then( result => {
         console.log(result)
         if (result != null) {
-            insertProduct(result.title, result.price, result.img)
+            insertSuperC(result.title, result.price, result.img, id)
         }
     })
-    
-
 
     return res.status(200).json({ message : 'barcode received'})
 }

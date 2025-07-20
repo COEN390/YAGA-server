@@ -54,10 +54,6 @@ async function supercScraper(barcode) {
   console.log("🔗", url);
 
   
-
-  // Close the browser when done
-  await browser.close();
-  
   return {title, price, img};
 }
 
