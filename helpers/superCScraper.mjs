@@ -1,5 +1,5 @@
 // supercScraper.mjs
-import { getBrowser } from './setupBrowser.mjs'; // Adjust path if needed
+import { getBrowser } from './setupBrowser.mjs';
 
 // Main function to scrape SuperC by barcode --> ensure barcode is 12 digits
 // Returns an object with title, price, and image URL

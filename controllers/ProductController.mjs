@@ -1,6 +1,7 @@
 
 import { insertProduct } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxScraper.mjs";
+import { supercScraper } from "../helpers/superCScraper.mjs";
 
 // testing
 const getProduct = (req, res) => {
@@ -10,6 +11,8 @@ const getProduct = (req, res) => {
 
 const addProduct = (req, res) => {
 
+    // Todo!!!
+    // need to make sure it is not fucked
     let { barcode } = req.body;
 
     // Todo
@@ -21,14 +24,19 @@ const addProduct = (req, res) => {
     console.log(barcode)
     maxiScraper(barcode).then( result => {
 
-        // Todo
-        // insert the result to db
         console.log(result)
 
-        insertProduct(result.title, result.price, result.img)
+        if (result != null) {
+            insertProduct(result.title, result.price, result.img)
+        }
     })
 
-
+    supercScraper(barcode).then( result => {
+        console.log(result)
+        if (result != null) {
+            insertProduct(result.title, result.price, result.img)
+        }
+    })
     
 
 

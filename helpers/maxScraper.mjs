@@ -1,23 +1,9 @@
-import { chromium } from 'playwright';
-
-let cachedSetup = null;
-
-async function getBrower() {
-    if (cachedSetup) {
-      return cachedSetup; // Reuse the existing browser/context
-    }
-  
-    const browser = await chromium.launch({ headless: true });
-    const context = await browser.newContext();
-  
-    cachedSetup = { browser, context };
-    return cachedSetup;
-}
+import { getBrowser } from './setupBrowser.mjs';
 
 
 async function maxiScraper(barcode) {
 
-    const { browser, context } = await getBrower()
+    const { browser, context } = await getBrowser()
     const page = await context.newPage();
 
     await page.goto(`https://www.maxi.ca/en/search?search-bar=${barcode}`);

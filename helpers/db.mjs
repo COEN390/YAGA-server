@@ -25,9 +25,7 @@ const insertProduct = (name, price, img) => {
 
     const db = getDB()
 
-    console.log("meow")
     db.run(`INSERT INTO products (name, price, img) VALUES (?, ?, ?)`, [name, price, img], (err) => {
-        console.log("fuuuuuck")
         console.log(err)
     });
 
