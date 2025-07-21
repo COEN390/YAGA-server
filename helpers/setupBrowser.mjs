@@ -1,15 +1,23 @@
-// setupBrowser.mjs
+// helpers/setupBrowser.mjs
 import { chromium } from 'playwright';
 
-let cachedBrowser = null;
-let cachedContext = null;
+async function getBrowser() {
+  const browser = await chromium.launch({
+    headless: true,
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
+  });
 
-export async function getBrowser() {
-    if (cachedBrowser && cachedContext) {
-        return { browser: cachedBrowser, context: cachedContext };
-    }
+  const context = await browser.newContext({
+    viewport: { width: 1280, height: 720 },
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+  });
 
-    cachedBrowser = await chromium.launch({ headless: true });
-    cachedContext = await cachedBrowser.newContext();
-    return { browser: cachedBrowser, context: cachedContext };
+  return { browser, context };
 }
+
+export { getBrowser };

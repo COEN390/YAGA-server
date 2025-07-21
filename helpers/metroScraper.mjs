@@ -7,31 +7,32 @@ async function metroScraper(barcode) {
   const url = `https://www.metro.ca/en/online-grocery/search?filter=${barcode}`;
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
+  // Scroll multiple times to trigger lazy loading
+  for (let i = 0; i < 3; i++) {
+    await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+    await page.waitForTimeout(2000); // 2s between scrolls
+  }
 
-  // Scroll to ensure tiles are loaded
-  await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-  await page.waitForTimeout(7000); // wait for JS rendering
+  // Next line is for debugging purposes, uncomment to take a screenshot
+  // await page.screenshot({ path: `metro-debug-${barcode}.png`, fullPage: true });
 
-
-  // Look for the proper tile
-  const tiles = await page.$$('div.products-search--grid.searchOnlineResults div.default-product-tile');
-
-  if (tiles.length === 0) {
-    console.log("No products found for this barcode.");
+  // Wait explicitly for the product tile to appear
+  try {
+    await page.waitForSelector('div.products-search--grid div.default-product-tile', { timeout: 7000 });
+  } catch (err) {
+    console.log("❌ No products found (waitForSelector timeout).");
     await browser.close();
     return;
   }
-  
-    const product = tiles[0];
-    
 
-    // product code logic to ensure right barcode, it is buggy at the moment.
-    // const productCode = await product.getAttribute('data-product-code');
-    // if (productCode !== barcode) {
-    //   console.log("🚫 Wrong item returned.");
-    //   await browser.close();
-    //   return { error: "Wrong item returned" };
-    // }
+  const tiles = await page.$$('div.products-search--grid div.default-product-tile');
+  if (tiles.length === 0) {
+    console.log("❌ No products found for this barcode.");
+    await browser.close();
+    return;
+  }
+
+  const product = tiles[0];
 
   const img = await product
     .$eval('img', img => img.getAttribute('src'))
@@ -40,7 +41,7 @@ async function metroScraper(barcode) {
   const title = await product
     .$eval('.head__title', el => el.innerText.trim())
     .catch(() => 'No title');
-    
+
   const price =
     (await product
       .$eval('.pricing__sale-price span.price-update', el => el.innerText.trim())
@@ -53,10 +54,9 @@ async function metroScraper(barcode) {
   console.log("💰", price);
   console.log("🖼️", img);
   console.log("🔗", url);
-      
-    await browser.close();
-    return { title, price, img };
-  
+
+  await browser.close();
+  return { title, price, img };
 }
 
 export { metroScraper };
