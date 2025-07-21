@@ -12,7 +12,15 @@ async function maxiScraper(barcode, page) {
         return null;
     }
 
-    const products = await page.$$(".css-yyn1h");
+    let products;
+
+    try{
+        products = await page.$$(".css-yyn1h");
+    }
+    catch(e) {
+        console.log("maxi timed out!!!")
+        return null
+    }
 
     for (const product of products) {
         const img = await product.$eval("img", el => el.getAttribute("src"));

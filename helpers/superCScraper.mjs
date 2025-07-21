@@ -13,7 +13,14 @@ async function supercScraper(barcode, page) {
   await page.waitForSelector('div.default-product-tile');
 
   // Select the first product tile on the page
-  const product = await page.$('div.default-product-tile');
+  let product
+  try{
+      product = await page.$('div.default-product-tile');
+  }
+  catch(e) {
+    console.log("superC got timed out");
+    return null
+  }
 
   // If no product is found (unexpected barcode or network issue), exit early
   if (!product) {

@@ -1,5 +1,7 @@
 import { getAllBarcodes } from "./db.mjs";
 import { maxiScraper } from "./maxiScraper.mjs";
+import { metroScraper } from "./metroScraper.mjs";
+import { getPage } from "./setupBrowser.mjs";
 import { supercScraper } from "./superCScraper.mjs";
 
 const message = (ws, msg, wss) => {
@@ -12,37 +14,44 @@ const close = (intervalId) => {
 
 }
 
-const connection = (ws, wss) => {
+const connection = async (ws, wss) => {
   
     ws.on('message', (msg) => message(ws, msg, wss));
-  
+
+    const maxiPage = await getPage()
+    const superCPage = await getPage()
+    const metroPage = await getPage()
+
     const intervalId = setInterval(() => {
-        clientRoutin(ws,wss)
+        clientRoutin(ws,wss, maxiPage, superCPage, metroPage)
     }, 30000);
 
 
     ws.on('close', () => close(intervalId));
-    
-
 };
 
-const clientRoutin = (ws, wss) => {
+const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
 
     getAllBarcodes().then(barcodes => {
     
-        maxiRoutin(ws, wss, barcodes).then(res =>
+        maxiRoutin(ws, wss, barcodes, maxiPage).then(res =>
             console.log(res)
         )
 
-        superCRoutin(ws, wss, barcodes).then(res => 
+        superCRoutin(ws, wss, barcodes, superCPage).then(res => 
             console.log(res)
         )
+
+        metroRoutin(ws, wss, barcodes, metroPage).then(res =>
+            console.log(res)
+        )
+
     })
 }
 
-const maxiRoutin = async (ws, wss, barcodes) => {
+const maxiRoutin = async (ws, wss, barcodes, page) => {
     for (const b of barcodes) {
-        const data = await maxiScraper(b.barcode)
+        const data = await maxiScraper(b.barcode, page)
         const str = JSON.stringify(data);
         ws.send(str)        
     }
@@ -50,16 +59,26 @@ const maxiRoutin = async (ws, wss, barcodes) => {
     return "Maxi Routin is done"
 }
 
-const superCRoutin = async (ws, wss, barcodes) => {
+const superCRoutin = async (ws, wss, barcodes, page) => {
 
     for (const b of barcodes) {
         const barcode12 = b.barcode.slice(1);
-        const data = await supercScraper(barcode12)
+        const data = await supercScraper(barcode12, page)
         const str = JSON.stringify(data)
         ws.send(str)
     }
-
     return "Super C Routin is done"
 }
+
+const metroRoutin = async (ws, wss, barcodes, page) => {
+        for (const b of barcodes) {
+        const barcode12 = b.barcode.slice(1);
+        const data = await metroScraper(barcode12, page)
+        const str = JSON.stringify(data)
+        ws.send(str)
+    }
+    return "Super C Routin is done"
+}
+
 
 export { connection }
