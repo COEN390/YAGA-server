@@ -15,7 +15,7 @@ async function metroScraper(barcode, page) {
 
   // Wait explicitly for the product tile to appear
   try {
-    await page.waitForSelector('div.products-search--grid div.default-product-tile', { timeout: 7000 });
+    await page.waitForSelector('div.products-search--grid div.default-product-tile', { timeout: 20000 });
   } catch (err) {
     console.log("❌ No products found (waitForSelector timeout).");
     return;

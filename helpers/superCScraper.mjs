@@ -6,16 +6,18 @@ async function supercScraper(barcode, page) {
   // Construct the Super C search URL with the given barcode
   const url = `https://www.superc.ca/en/search?filter=${barcode}`;
 
-  // Navigate to the URL and wait until the network is idle (no more loading)
-  await page.goto(url, { waitUntil: 'networkidle' });
-
-  // Wait for at least one product tile to appear in the results
-  await page.waitForSelector('div.default-product-tile');
-
-  // Select the first product tile on the page
   let product
-  try{
-      product = await page.$('div.default-product-tile');
+ 
+  // Navigate to the URL and wait until the network is idle (no more loading)
+    try{
+
+    await page.goto(url, { waitUntil: 'networkidle' });
+
+    // Wait for at least one product tile to appear in the results
+     await page.waitForSelector('div.default-product-tile');
+
+    // Select the first product tile on the page
+    product = await page.$('div.default-product-tile');
   }
   catch(e) {
     console.log("superC got timed out");
