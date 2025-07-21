@@ -14,7 +14,7 @@ async function supercScraper(barcode, page) {
     await page.goto(url, { waitUntil: 'networkidle' });
 
     // Wait for at least one product tile to appear in the results
-     await page.waitForSelector('div.default-product-tile');
+    await page.waitForSelector('div.default-product-tile');
 
     // Select the first product tile on the page
     product = await page.$('div.default-product-tile');

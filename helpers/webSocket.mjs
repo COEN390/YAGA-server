@@ -52,8 +52,12 @@ const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
 const maxiRoutin = async (ws, wss, barcodes, page) => {
     for (const b of barcodes) {
         const data = await maxiScraper(b.barcode, page)
-        const str = JSON.stringify(data);
-        ws.send(str)        
+        if(data) {
+            data["barcode"] = b.barcode
+            data["store"] = "maxi"
+            const str = JSON.stringify(data);
+            ws.send(str)        
+        }
     }
 
     return "Maxi Routin is done"
@@ -64,8 +68,12 @@ const superCRoutin = async (ws, wss, barcodes, page) => {
     for (const b of barcodes) {
         const barcode12 = b.barcode.slice(1);
         const data = await supercScraper(barcode12, page)
-        const str = JSON.stringify(data)
-        ws.send(str)
+        if(data) {
+            data["barcode"] = b.barcode
+            data["store"] = "superC"
+            const str = JSON.stringify(data);
+            ws.send(str)        
+        }
     }
     return "Super C Routin is done"
 }
@@ -74,8 +82,12 @@ const metroRoutin = async (ws, wss, barcodes, page) => {
         for (const b of barcodes) {
         const barcode12 = b.barcode.slice(1);
         const data = await metroScraper(barcode12, page)
-        const str = JSON.stringify(data)
-        ws.send(str)
+        if(data) {
+            data["barcode"] = b.barcode
+            data["store"] = "metro"
+            const str = JSON.stringify(data);
+            ws.send(str)        
+        }
     }
     return "Super C Routin is done"
 }

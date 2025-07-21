@@ -5,17 +5,18 @@ async function metroScraper(barcode, page) {
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
 
   // Scroll multiple times to trigger lazy loading
-  for (let i = 0; i < 3; i++) {
-    await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-    await page.waitForTimeout(2000); // 2s between scrolls
-  }
-
-  // Next line is for debugging purposes, uncomment to take a screenshot
-  // await page.screenshot({ path: `metro-debug-${barcode}.png`, fullPage: true });
-
-  // Wait explicitly for the product tile to appear
   try {
+
+    for (let i = 0; i < 3; i++) {
+      await page.evaluate(() => window.scrollBy(0, window.innerHeight));
+      await page.waitForTimeout(2000); // 2s between scrolls
+    }
+
+    // Next line is for debugging purposes, uncomment to take a screenshot
+    // await page.screenshot({ path: `metro-debug-${barcode}.png`, fullPage: true });
+    // Wait explicitly for the product tile to appear
     await page.waitForSelector('div.products-search--grid div.default-product-tile', { timeout: 20000 });
+    
   } catch (err) {
     console.log("❌ No products found (waitForSelector timeout).");
     return;
