@@ -1,42 +1,65 @@
 import { getAllBarcodes } from "./db.mjs";
 import { maxiScraper } from "./maxScraper.mjs";
-
+import { supercScraper } from "./superCScraper.mjs";
 
 const message = (ws, msg, wss) => {
     console.log('Received:', msg);
 }
 
-const close = () => {
+const close = (intervalId) => {
     console.log('Client disconnected');
+    clearInterval(intervalId);
+
 }
 
 const connection = (ws, wss) => {
   
     ws.on('message', (msg) => message(ws, msg, wss));
   
-    ws.on('close', close);
+    const intervalId = setInterval(() => {
+        clientRoutin(ws,wss)
+    }, 30000);
+
+
+    ws.on('close', () => close(intervalId));
     
 
-    scraper_routin(ws,wss)
 };
 
-const scraper_routin = async (ws, wss) => {
-    const productRow = await getAllBarcodes()
-    while(true) {
-        console.log(productRow)
-        for (const element of productRow) {
-            console.log(element)
-            const data = await maxiScraper(element.name)
-            console.log(data)
-            console.log("meow")
-            if (data != null) {
-                ws.send(data.title)
-                ws.send(data.price)
-                ws.send(data.price)
-            }
-        }
-    }
+const clientRoutin = (ws, wss) => {
+
+    getAllBarcodes().then(barcodes => {
+    
+        maxiRoutin(ws, wss, barcodes).then(res =>
+            console.log(res)
+        )
+
+        superCRoutin(ws, wss, barcodes).then(res => 
+            console.log(res)
+        )
+    })
 }
 
+const maxiRoutin = async (ws, wss, barcodes) => {
+    for (const b of barcodes) {
+        const data = await maxiScraper(b.barcode)
+        const str = JSON.stringify(data);
+        ws.send(str)        
+    }
+
+    return "Maxi Routin is done"
+}
+
+const superCRoutin = async (ws, wss, barcodes) => {
+
+    for (const b of barcodes) {
+        const barcode12 = b.barcode.slice(1);
+        const data = await supercScraper(barcode12)
+        const str = JSON.stringify(data)
+        ws.send(str)
+    }
+
+    return "Super C Routin is done"
+}
 
 export { connection }
