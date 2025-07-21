@@ -1,10 +1,6 @@
-import { getBrowser } from './setupBrowser.mjs';
 
 
-async function maxiScraper(barcode) {
-
-    const { context } = await getBrowser()
-    const page = await context.newPage();
+async function maxiScraper(barcode, page) {
 
     await page.goto(`https://www.maxi.ca/en/search?search-bar=${barcode}`);
 

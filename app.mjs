@@ -4,10 +4,15 @@ import bodyparser from "body-parser"
 import WebSocket, { WebSocketServer } from 'ws';
 import { connection } from "./helpers/webSocket.mjs";
 import { createDB } from "./helpers/db.mjs";
+import { getBrowser } from "./helpers/setupBrowser.mjs";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 const express_port = 3000
 const wss_port = 8080
+
+// setup browser
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+getBrowser().then(res => {})
 
 
 // DB

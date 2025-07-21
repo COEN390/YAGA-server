@@ -1,8 +1,5 @@
-import { getBrowser } from './setupBrowser.mjs';
 
-async function metroScraper(barcode) {
-  const { browser, context } = await getBrowser();
-  const page = await context.newPage();
+async function metroScraper(barcode, page) {
 
   const url = `https://www.metro.ca/en/online-grocery/search?filter=${barcode}`;
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -21,14 +18,12 @@ async function metroScraper(barcode) {
     await page.waitForSelector('div.products-search--grid div.default-product-tile', { timeout: 7000 });
   } catch (err) {
     console.log("❌ No products found (waitForSelector timeout).");
-    await browser.close();
     return;
   }
 
   const tiles = await page.$$('div.products-search--grid div.default-product-tile');
   if (tiles.length === 0) {
     console.log("❌ No products found for this barcode.");
-    await browser.close();
     return;
   }
 
@@ -55,7 +50,6 @@ async function metroScraper(barcode) {
   console.log("🖼️", img);
   console.log("🔗", url);
 
-  await browser.close();
   return { title, price, img };
 }
 

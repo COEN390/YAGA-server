@@ -1,5 +1,5 @@
 import { getAllBarcodes } from "./db.mjs";
-import { maxiScraper } from "./maxScraper.mjs";
+import { maxiScraper } from "./maxiScraper.mjs";
 import { supercScraper } from "./superCScraper.mjs";
 
 const message = (ws, msg, wss) => {

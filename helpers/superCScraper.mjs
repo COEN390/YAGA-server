@@ -1,11 +1,7 @@
-// Testing for SuperC scraper, to be put into a function which can be called with a barcode.
-import { getBrowser } from './setupBrowser.mjs';
 
 // Main async function to scrape one product from Super C using the barcode
-async function supercScraper(barcode) {
+async function supercScraper(barcode, page) {
   // Launch a Chromium browser instance (headless mode true for production, false for debugging)
-  const { browser, context } = await getBrowser()
-  const page = await context.newPage();
 
   // Construct the Super C search URL with the given barcode
   const url = `https://www.superc.ca/en/search?filter=${barcode}`;
@@ -22,7 +18,6 @@ async function supercScraper(barcode) {
   // If no product is found (unexpected barcode or network issue), exit early
   if (!product) {
     console.log("❌ No product found for this barcode.");
-    await browser.close();
     return;
   }
 
