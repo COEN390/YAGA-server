@@ -1,6 +1,7 @@
 
 import { insertBarcode, insertMaxi, insertSuperC } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxScraper.mjs";
+import { metroScraper } from "../helpers/metroScraper.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
 
 // testing
@@ -34,6 +35,13 @@ const addProduct = async (req, res) => {
 
     const barcode12 = barcode.slice(1);
     supercScraper(barcode12).then( result => {
+        console.log(result)
+        if (result != null) {
+            insertSuperC(result.title, result.price, result.img, id)
+        }
+    })
+
+    metroScraper(barcode12).then( result => {
         console.log(result)
         if (result != null) {
             insertSuperC(result.title, result.price, result.img, id)
