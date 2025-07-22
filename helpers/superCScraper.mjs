@@ -11,7 +11,7 @@ async function supercScraper(barcode, page) {
   // Navigate to the URL and wait until the network is idle (no more loading)
     try{
 
-    await page.goto(url, { waitUntil: 'networkidle' });
+    await page.goto(url);
 
     // Wait for at least one product tile to appear in the results
     await page.waitForSelector('div.default-product-tile');
