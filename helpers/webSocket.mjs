@@ -27,7 +27,7 @@ const connection = async (ws, wss) => {
     }, 100000);
 
 
-    clientRoutin(ws,wss, maxiPage, superCPage, metroPage).then(() => {})
+    clientRoutin(ws,wss, maxiPage, superCPage, metroPage)
     ws.on('close', () => close(intervalId));
 };
 
