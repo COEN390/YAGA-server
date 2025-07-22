@@ -2,19 +2,21 @@
 
 async function maxiScraper(barcode, page) {
 
-    await page.goto(`https://www.maxi.ca/en/search?search-bar=${barcode}`);
-
-    await page.waitForSelector("[data-testid='product-image']");
-
-    const headerText = await page.textContent("[data-testid='heading']");
-    if (headerText === `We were unable to find results for "${barcode}"`) {
-        console.log("Product not found");
-        return null;
-    }
-
     let products;
 
+
     try{
+        await page.goto(`https://www.maxi.ca/en/search?search-bar=${barcode}`);
+
+        await page.waitForSelector("[data-testid='product-image']");
+
+        const headerText = await page.textContent("[data-testid='heading']");
+        if (headerText === `We were unable to find results for "${barcode}"`) {
+            console.log("Product not found");
+            return null;
+        }
+
+
         products = await page.$$(".css-yyn1h");
     }
     catch(e) {
