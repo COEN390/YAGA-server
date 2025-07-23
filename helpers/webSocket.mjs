@@ -25,7 +25,7 @@ const connection = async (ws, wss) => {
 
     const intervalId = setInterval(() => {
         clientRoutin(ws,wss, maxiPage, superCPage, metroPage)
-    }, 100000);
+    }, 10000);
 
 
     clientRoutin(ws,wss, maxiPage, superCPage, metroPage)
