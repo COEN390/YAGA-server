@@ -3,6 +3,7 @@ import { maxiScraper } from "./maxiScraper.mjs";
 import { metroScraper } from "./metroScraper.mjs";
 import { getPage } from "./setupBrowser.mjs";
 import { supercScraper } from "./superCScraper.mjs";
+import { getBarcodeData } from "./db.mjs";
 
 const message = (ws, msg, wss) => {
     console.log('Received:', msg);
@@ -60,21 +61,21 @@ const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
                 data["store"] = "maxi"
                 const str = JSON.stringify(data);
                 ws.send(str)        
-            }) 
+            }).catch(err => { console.log(err)})
 
             getBarcodeData('super_c',b.id).then(data => {
                 data["barcode"] = b.barcode
                 data["store"] = "maxi"
                 const str = JSON.stringify(data);
                 ws.send(str)        
-            }) 
+            }).catch(err => { console.log(err)})
 
             getBarcodeData('metro',b.id).then(data => {
                 data["barcode"] = b.barcode
                 data["store"] = "maxi"
                 const str = JSON.stringify(data);
                 ws.send(str)        
-            }) 
+            }).catch(err => { console.log(err)})
         }
     })
 }

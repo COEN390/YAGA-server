@@ -105,6 +105,7 @@ const getAllBarcodes = () => {
 
 const getBarcodeData = (table, barcode_id) => {
   
+    const db = getDB();
 
   if(table == "maxi") {
     return new Promise((resolve, reject) => {
@@ -143,6 +144,8 @@ const getBarcodeData = (table, barcode_id) => {
   if(table == "metro") {
     return new Promise((resolve, reject) => {
       
+
+
       db.get(`SELECT * FROM metro WHERE barcode_id = ?`, [barcode_id], (err, row) => {
         if (err) {
           console.log(err)
