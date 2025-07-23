@@ -32,6 +32,20 @@ const createDB = () => {
       FOREIGN KEY (barcode_id) REFERENCES barcodes (id)
     )`
   )
+
+
+  db.run(
+    `CREATE TABLE IF NOT EXISTS metro (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT,
+      price TEXT,
+      img_url TEXT,
+      barcode_id INTEGER,
+      FOREIGN KEY (barcode_id) REFERENCES barcodes (id)
+    )`
+  )
+
+
 }
 
 const getDB = () => {
@@ -89,4 +103,60 @@ const getAllBarcodes = () => {
   });
 }
 
-export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB }
+const getBarcodeData = (table, barcode_id) => {
+  
+
+  if(table == "maxi") {
+    return new Promise((resolve, reject) => {
+      
+      db.get(`SELECT * FROM maxi WHERE barcode_id = ?`, [barcode_id], (err, row) => {
+        if (err) {
+          console.log(err)
+          reject(err)
+        } 
+        else if (row) {
+          resolve(row)
+        } else {
+          reject('No row found');
+        }
+      });
+    }) 
+  }
+
+  if(table == "super_c") {
+    return new Promise((resolve, reject) => {
+      
+      db.get(`SELECT * FROM super_c WHERE barcode_id = ?`, [barcode_id], (err, row) => {
+        if (err) {
+          console.log(err)
+          reject(err)
+        } 
+        else if (row) {
+          resolve(row)
+        } else {
+          reject('No row found');
+        }
+      });
+    }) 
+  }
+
+  if(table == "metro") {
+    return new Promise((resolve, reject) => {
+      
+      db.get(`SELECT * FROM metro WHERE barcode_id = ?`, [barcode_id], (err, row) => {
+        if (err) {
+          console.log(err)
+          reject(err)
+        } 
+        else if (row) {
+          resolve(row)
+        } else {
+          reject('No row found');
+        }
+      });
+    }) 
+  }
+
+}
+
+export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData }

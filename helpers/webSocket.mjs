@@ -33,6 +33,8 @@ const connection = async (ws, wss) => {
 
 const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
 
+
+    /*
     getAllBarcodes().then(barcodes => {
     
         maxiRoutin(ws, wss, barcodes, maxiPage).then(res =>
@@ -47,6 +49,33 @@ const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
             console.log(res)
         )
 
+    })*/
+
+
+    getAllBarcodes().then(barcodes => {
+
+        for(const b of barcodes) {
+            getBarcodeData('maxi',b.id).then(data => {
+                data["barcode"] = b.barcode
+                data["store"] = "maxi"
+                const str = JSON.stringify(data);
+                ws.send(str)        
+            }) 
+
+            getBarcodeData('super_c',b.id).then(data => {
+                data["barcode"] = b.barcode
+                data["store"] = "maxi"
+                const str = JSON.stringify(data);
+                ws.send(str)        
+            }) 
+
+            getBarcodeData('metro',b.id).then(data => {
+                data["barcode"] = b.barcode
+                data["store"] = "maxi"
+                const str = JSON.stringify(data);
+                ws.send(str)        
+            }) 
+        }
     })
 }
 
