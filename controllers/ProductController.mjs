@@ -1,5 +1,5 @@
 
-import { insertBarcode, insertMaxi, insertSuperC } from "../helpers/db.mjs";
+import { insertBarcode, insertMaxi, insertSuperC, removeBarcode } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { getPage } from "../helpers/setupBrowser.mjs";
@@ -58,5 +58,14 @@ const addProduct = async (req, res) => {
     return res.status(200).json({ message : 'barcode received'})
 }
 
+const removeProduct = async (req, res) => {
+    let { barcode } = req.body
+    
+    removeBarcode(barcode)
 
-export { addProduct, getProduct }
+    return res.status(202).json({ message: 'barcode removed'})
+    
+}
+
+
+export { addProduct, getProduct, removeProduct }

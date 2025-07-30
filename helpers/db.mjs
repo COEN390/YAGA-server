@@ -60,6 +60,15 @@ const getDB = () => {
     return db
 }
 
+const removeBarcode = (barcode) => {
+
+  const db = getDB()
+  db.run('DELETE FROM barcodes WHERE barcode = ?', [barcode]);
+
+
+
+}     
+  
 const insertBarcode = (barcode) => {
 
     const db = getDB()
@@ -162,4 +171,4 @@ const getBarcodeData = (table, barcode_id) => {
 
 }
 
-export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData }
+export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData , removeBarcode }
