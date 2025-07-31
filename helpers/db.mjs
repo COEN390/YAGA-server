@@ -171,4 +171,46 @@ const getBarcodeData = (table, barcode_id) => {
 
 }
 
-export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData , removeBarcode }
+const getAllMaxi = () => {
+  const db = getDB();
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM maxi`, (err, rows) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+const getAllSuperC = () => {
+  const db = getDB();
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM super_c`, (err, rows) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+const getAllMetro = () => {
+  const db = getDB();
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM metro`, (err, rows) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+      } else {
+        resolve(rows);
+      }
+    });
+  });
+}
+
+export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData , removeBarcode , getAllMaxi , getAllSuperC , getAllMetro }
