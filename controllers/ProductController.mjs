@@ -1,13 +1,33 @@
 
-import { insertBarcode, insertMaxi, insertSuperC, removeBarcode } from "../helpers/db.mjs";
+import { insertBarcode, insertMaxi, insertSuperC, removeBarcode , getAllMaxi, getAllSuperC, getAllMetro } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { getPage } from "../helpers/setupBrowser.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
 
 // testing
-const getProduct = (req, res) => {
-    return res.status(201).json({ message : 'role is created'})
+const getProducts = async (req, res) => {
+
+    const maxiProducts = await getAllMaxi();
+    const superCProducts = await getAllSuperC();
+    const metroProducts = await getAllMetro();
+    
+    const mapedMaxi = maxiProducts.map( product => {
+        product.store = 'maxi';
+        return product;
+    });
+    const mapedSuperC = superCProducts.map( product => {
+        product.store = 'superC';
+        return product;
+    });
+    const mapedMetro = metroProducts.map( product => {
+        product.store = 'metro';
+        return product;
+    });
+
+    const allProducts = [...mapedMaxi, ...mapedSuperC, ...mapedMetro];
+
+    return res.status(200).json({ products: allProducts })
 }
 
 const addProduct = async (req, res) => {
@@ -68,4 +88,6 @@ const removeProduct = async (req, res) => {
 }
 
 
-export { addProduct, getProduct, removeProduct }
+
+
+export { addProduct, getProducts, removeProduct }
