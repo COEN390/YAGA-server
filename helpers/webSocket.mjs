@@ -65,14 +65,14 @@ const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
 
             getBarcodeData('super_c',b.id).then(data => {
                 data["barcode"] = b.barcode
-                data["store"] = "maxi"
+                data["store"] = "super c"
                 const str = JSON.stringify(data);
                 ws.send(str)        
             }).catch(err => { console.log(err)})
 
             getBarcodeData('metro',b.id).then(data => {
                 data["barcode"] = b.barcode
-                data["store"] = "maxi"
+                data["store"] = "metro"
                 const str = JSON.stringify(data);
                 ws.send(str)        
             }).catch(err => { console.log(err)})
