@@ -5,6 +5,7 @@ import WebSocket, { WebSocketServer } from 'ws';
 import { connection } from "./helpers/webSocket.mjs";
 import { createDB } from "./helpers/db.mjs";
 import { getBrowser } from "./helpers/setupBrowser.mjs";
+import { createSearchResultsTable } from "./helpers/searchResultsDB.mjs";
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 const express_port = 3000
@@ -18,6 +19,8 @@ getBrowser().then(res => {})
 // DB
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 createDB()
+createSearchResultsTable();
+
 
 
 // Rest API setup ( express js )
