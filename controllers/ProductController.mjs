@@ -26,7 +26,14 @@ const getProducts = async (req, res) => {
 
     const allProducts = [...mapedMaxi, ...mapedSuperC, ...mapedMetro];
 
-    return res.status(200).json({ products: allProducts })
+    const barcodes = await getAllBarcodesDB()
+    
+    const mappedProducts = allProducts.map(d => {
+        d.barcode = barcodes.find(b => b.id === d.barcode_id).barcode
+        return d
+    })
+
+    return res.status(200).json({ products: mappedProducts })
 }
 
 const addProduct = async (req, res) => {
