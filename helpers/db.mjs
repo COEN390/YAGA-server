@@ -61,13 +61,43 @@ const getDB = () => {
 }
 
 const removeBarcode = (barcode) => {
+  const db = getDB();
 
-  const db = getDB()
-  db.run('DELETE FROM barcodes WHERE barcode = ?', [barcode]);
+  db.get(`SELECT id FROM barcodes WHERE barcode = ?`, [barcode], (err, row) => {
+    if (err) {
+      return console.error(err);
+    }
 
+    if (!row) {
+      return console.log("Barcode not found.");
+    }
 
+    const id = row.id;
 
-}     
+    // Delete related rows first
+    db.run(`DELETE FROM maxi WHERE barcode_id = ?`, [id], (err) => {
+      if (err) console.error(err);
+    });
+
+    db.run(`DELETE FROM super_c WHERE barcode_id = ?`, [id], (err) => {
+      if (err) console.error(err);
+    });
+
+    db.run(`DELETE FROM metro WHERE barcode_id = ?`, [id], (err) => {
+      if (err) console.error(err);
+    });
+
+    // Then delete barcode
+    db.run(`DELETE FROM barcodes WHERE id = ?`, [id], (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(`Barcode ${barcode} and related data removed.`);
+      }
+    });
+  });
+};
+ 
   
 const insertBarcode = (barcode) => {
 
@@ -97,7 +127,7 @@ const insertSuperC = (title, price, url, id) => {
   });
 }
 
-const getAllBarcodes = () => {
+const getAllBarcodesDB = () => {
 
   const db = getDB();
   return new Promise((resolve, reject) => {
@@ -114,7 +144,7 @@ const getAllBarcodes = () => {
 
 const getBarcodeData = (table, barcode_id) => {
   
-    const db = getDB();
+  const db = getDB();
 
   if(table == "maxi") {
     return new Promise((resolve, reject) => {
@@ -213,4 +243,4 @@ const getAllMetro = () => {
   });
 }
 
-export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodes , createDB , getBarcodeData , removeBarcode , getAllMaxi , getAllSuperC , getAllMetro }
+export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodesDB , createDB , getBarcodeData , removeBarcode , getAllMaxi , getAllSuperC , getAllMetro }

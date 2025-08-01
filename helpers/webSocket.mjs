@@ -1,4 +1,4 @@
-import { getAllBarcodes } from "./db.mjs";
+import { getAllBarcodesDB } from "./db.mjs";
 import { maxiScraper } from "./maxiScraper.mjs";
 import { metroScraper } from "./metroScraper.mjs";
 import { getPage } from "./setupBrowser.mjs";
@@ -50,10 +50,10 @@ const clientRoutin = (ws, wss, maxiPage, superCPage, metroPage) => {
             console.log(res)
         )
 
-    })*/
+            })*/
 
 
-    getAllBarcodes().then(barcodes => {
+    getAllBarcodesDB().then(barcodes => {
 
         for(const b of barcodes) {
             getBarcodeData('maxi',b.id).then(data => {

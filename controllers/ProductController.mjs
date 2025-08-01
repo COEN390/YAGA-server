@@ -1,11 +1,10 @@
 
-import { insertBarcode, insertMaxi, insertSuperC, removeBarcode , getAllMaxi, getAllSuperC, getAllMetro } from "../helpers/db.mjs";
+import { insertBarcode, insertMaxi, insertSuperC, removeBarcode , getAllMaxi, getAllSuperC, getAllMetro, getAllBarcodesDB } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { getPage } from "../helpers/setupBrowser.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
 
-// testing
 const getProducts = async (req, res) => {
 
     const maxiProducts = await getAllMaxi();
@@ -87,7 +86,11 @@ const removeProduct = async (req, res) => {
     
 }
 
+const getBarcodes = async (req, res) => {
+    const data = await getAllBarcodesDB();
+
+    return res.status(200).json({barcodes : data})
+}
 
 
-
-export { addProduct, getProducts, removeProduct }
+export { addProduct, getProducts, removeProduct, getBarcodes }
