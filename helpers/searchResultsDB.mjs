@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 
 // Opens (or creates if it doesn't exist) a SQLite database for storing search results
 // Filename is 'searchDatabase.db' to avoid conflicts with other databases
-const getDB = () => {
+const getSearchDB = () => {
   const db = new sqlite3.Database('./searchDatabase.db', (err) => {
     if (err) {
       return console.error(err.message);
@@ -15,7 +15,7 @@ const getDB = () => {
 
 // Creates the necessary table for storing search results
 const createSearchResultsTable = () => {
-  const db = getDB();
+  const db = getSearchDB();
 
   db.run(`
     CREATE TABLE IF NOT EXISTS name_search_results (
@@ -36,7 +36,7 @@ const createSearchResultsTable = () => {
 // Deletes all previous search results, should be called before a new search
 // to ensure only the latest results are stored.
 const clearNameSearchResults = () => {
-  const db = getDB();
+  const db = getSearchDB();
   db.run(`DELETE FROM name_search_results`, (err) => {
     if (err) console.error("❌ Failed to clear old search results:", err);
     else console.log("🧹 Cleared old name search results");
@@ -45,7 +45,7 @@ const clearNameSearchResults = () => {
 
 // Inserts a new product into the name_search_results table
 const insertNameSearchResult = (product, store, searchTerm) => {
-  const db = getDB();
+  const db = getSearchDB();
   const { title, price, img, quantity, brand, pricePerUnit } = product;
 
   db.run(
@@ -61,7 +61,7 @@ const insertNameSearchResult = (product, store, searchTerm) => {
 
 // Retrieves all search results from the name_search_results table
 const getAllSearchResults = () => {
-  const db = getDB();
+  const db = getSearchDB();
   return new Promise((resolve, reject) => {
     db.all(`SELECT * FROM name_search_results`, (err, rows) => {
       if (err) {

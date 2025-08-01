@@ -4,6 +4,48 @@ import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { getPage } from "../helpers/setupBrowser.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
+import { metroNameScrape } from "../helpers/metroNameScrape.mjs";
+import { createSearchResultsTable, clearNameSearchResults, insertNameSearchResult, getAllSearchResults } from "../helpers/searchResultsDB.mjs";
+
+const getSearchResults = async (req, res) => {
+  try {
+    const results = await getAllSearchResults();
+    return res.status(200).json({ products: results });
+  } catch (error) {
+    console.error("Failed to get search results", error);
+    return res.status(500).json({ error: "Could not retrieve search results" });
+  }
+};
+
+const searchByName = async (req, res) => {
+  const { searchTerm } = req.body;
+
+  if (!searchTerm || typeof searchTerm !== "string") {
+    return res.status(400).json({ error: "Invalid search term" });
+  }
+
+  try {
+    clearNameSearchResults(); // Clear old search results
+
+    const page = await getPage();
+    const results = await metroNameScrape(searchTerm, page);
+    await page.close();
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    results.forEach((product) => {
+      insertNameSearchResult(product, "metro", searchTerm);
+    });
+
+    return res.status(200).json({ message: "Search results inserted" });
+
+  } catch (error) {
+    console.error("Search error:", error);
+    return res.status(500).json({ error: "Something went wrong during the search" });
+  }
+};
 
 const getProducts = async (req, res) => {
 
@@ -100,4 +142,5 @@ const getBarcodes = async (req, res) => {
 }
 
 
-export { addProduct, getProducts, removeProduct, getBarcodes }
+export { addProduct, getProducts, removeProduct, 
+    getBarcodes, searchByName, getSearchResults }
