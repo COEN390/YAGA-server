@@ -1,5 +1,5 @@
 
-import { insertBarcode, insertMaxi, insertSuperC, removeBarcode , getAllMaxi, getAllSuperC, getAllMetro, getAllBarcodesDB } from "../helpers/db.mjs";
+import { insertBarcode, insertMaxi, insertSuperC, insertMetroDB, removeBarcode , getAllMaxi, getAllSuperC, getAllMetro, getAllBarcodesDB } from "../helpers/db.mjs";
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { getPage } from "../helpers/setupBrowser.mjs";
@@ -68,7 +68,7 @@ const addProduct = async (req, res) => {
         metroScraper(barcode12, page).then( result => {
             console.log(result)
             if (result != null) {
-                insertSuperC(result.title, result.price, result.img, id)
+                insertMetroDB(result.title, result.price, result.img, id)
             }
         }).finally( () => { page.close() } )
     })

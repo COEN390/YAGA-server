@@ -127,6 +127,12 @@ const insertSuperC = (title, price, url, id) => {
   });
 }
 
+const insertMetroDB = (title, price, url, id) => {
+  const db = getDB()
+  db.run(`INSERT INTO metro (title, price, img_url, barcode_id) VALUES (?, ?, ?, ?)`, [title, price, url, id], (err) => {
+  });
+}
+
 const getAllBarcodesDB = () => {
 
   const db = getDB();
@@ -243,4 +249,4 @@ const getAllMetro = () => {
   });
 }
 
-export { insertBarcode, insertMaxi, insertSuperC, getAllBarcodesDB , createDB , getBarcodeData , removeBarcode , getAllMaxi , getAllSuperC , getAllMetro }
+export { insertBarcode, insertMaxi, insertSuperC, insertMetroDB, getAllBarcodesDB , createDB , getBarcodeData , removeBarcode , getAllMaxi , getAllSuperC , getAllMetro }
