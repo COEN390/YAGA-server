@@ -9,6 +9,6 @@ router.get("/barcodes", getBarcodes)
 router.delete("/", removeProduct)
 router.post("/", addProduct)
 router.post("/search", searchByName)
-router.get("/search-results", getSearchResults)
+router.get("/search_results", getSearchResults)
 
 export default router

@@ -80,8 +80,6 @@ const getProducts = async (req, res) => {
 
 const addProduct = async (req, res) => {
 
-    // Todo!!!
-    // need to make sure it is not fucked
     let { barcode } = req.body;
 
     let id;
@@ -94,13 +92,15 @@ const addProduct = async (req, res) => {
     }   
 
     getPage().then(page => {
-        maxiScraper(barcode, page).then( result => {
+        metroScraper(barcode12, page).then( result => {
             console.log(result)
             if (result != null) {
-                insertMaxi(result.title, result.price, result.img, id)
+                insertMetroDB(result.title, result.price, result.img, id)
             }
         }).finally( () => { page.close() } )
     })
+
+
 
     const barcode12 = barcode.slice(1);
     getPage().then(page => {
@@ -111,16 +111,16 @@ const addProduct = async (req, res) => {
             }
         }).finally( () => { page.close() }  )
     })
-    
 
     getPage().then(page => {
-        metroScraper(barcode12, page).then( result => {
+        maxiScraper(barcode, page).then( result => {
             console.log(result)
             if (result != null) {
-                insertMetroDB(result.title, result.price, result.img, id)
+                insertMaxi(result.title, result.price, result.img, id)
             }
         }).finally( () => { page.close() } )
     })
+
     
 
     return res.status(200).json({ message : 'barcode received'})
