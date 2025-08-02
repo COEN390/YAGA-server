@@ -1,4 +1,4 @@
-import { getPage } from "./setupBrowser.mjs"
+import { getBrowser, getPage } from "./setupBrowser.mjs"
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { supercScraper } from "./superCScraper.mjs";
@@ -7,9 +7,7 @@ import {insertMaxi, insertSuperC, insertMetroDB } from "../helpers/db.mjs"
 
 const barcodeScraper = async (barcode, id) => {
 
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-
+    const { browser, context } = await getBrowser();
 
     const barcode12 = barcode.slice(1);
 
