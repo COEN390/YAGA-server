@@ -19,6 +19,11 @@ const barcodeScraper = async (barcode, id) => {
         insertMetroDB(metroResults.title, metroResults.price, metroResults.img, id)
     }
 
+    await metroPage.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    });
+
     metroPage.close()
 
     const superCPage = await getPage()
@@ -30,6 +35,11 @@ const barcodeScraper = async (barcode, id) => {
     if (superCResults != null) {
         insertSuperC(superCResults.title, superCResults.price, superCResults.img, id)
     }
+
+    await superCPage.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    });
 
     superCPage.close()
 
@@ -43,7 +53,15 @@ const barcodeScraper = async (barcode, id) => {
         insertMaxi(maxiResults.title, maxiResults.price, maxiResults.img, id)
     }
 
+    await maxiPage.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    });
+
     maxiPage.close()
+
+    await context.clearCookies();
+    
 
 }
 
