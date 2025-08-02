@@ -6,6 +6,7 @@ import { getPage } from "../helpers/setupBrowser.mjs";
 import { supercScraper } from "../helpers/superCScraper.mjs";
 import { metroNameScrape } from "../helpers/metroNameScrape.mjs";
 import { createSearchResultsTable, clearNameSearchResults, insertNameSearchResult, getAllSearchResults } from "../helpers/searchResultsDB.mjs";
+import { barcodeScraper } from "../helpers/scraperRoutin.mjs";
 
 const getSearchResults = async (req, res) => {
   try {
@@ -91,37 +92,9 @@ const addProduct = async (req, res) => {
         return res.status(200).json({ message : 'barcode is already registered' })
     }   
 
-    const barcode12 = barcode.slice(1);
-
-    getPage().then( async page => {
-
-        const metroResults = await metroScraper(barcode12, page)
-
-        console.log(metroResults)
-
-        if (metroResults != null) {
-            insertMetroDB(metroResults.title, metroResults.price, metroResults.img, id)
-        }
-
-        const superCResults = await supercScraper(barcode12, page)
-
-        console.log(superCResults)
-
-        if (superCResults != null) {
-            insertSuperC(superCResults.title, superCResults.price, superCResults.img, id)
-        }
-
-        const maxiResults = await maxiScraper(barcode, page)
-
-        console.log(maxiResults)
-
-        if (maxiResults != null) {
-            insertSuperC(maxiResults.title, maxiResults.price, maxiResults.img, id)
-        }
-
-        page.close()
+    barcodeScraper(barcode, id).then(() => {
+        console.log("scraping routin done")
     })
-
 
     
 
