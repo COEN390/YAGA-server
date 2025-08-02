@@ -91,35 +91,39 @@ const addProduct = async (req, res) => {
         return res.status(200).json({ message : 'barcode is already registered' })
     }   
 
-    getPage().then(page => {
-        metroScraper(barcode12, page).then( result => {
-            console.log(result)
-            if (result != null) {
-                insertMetroDB(result.title, result.price, result.img, id)
-            }
-        }).finally( () => { page.close() } )
-    })
-
-
-
     const barcode12 = barcode.slice(1);
-    getPage().then(page => {
-        supercScraper(barcode12, page).then( result => {
-            console.log(result)
-            if (result != null) {
-                insertSuperC(result.title, result.price, result.img, id)
-            }
-        }).finally( () => { page.close() }  )
+
+    getPage().then( async page => {
+
+        const metroResults = await metroScraper(barcode12, page)
+
+        console.log(metroResults)
+
+        if (metroResults != null) {
+            insertMetroDB(metroResults.title, metroResults.price, metroResults.img, id)
+        }
+
+        const superCResults = await supercScraper(barcode12, page)
+
+        console.log(superCResults)
+
+        if (superCResults != null) {
+            insertSuperC(superCResults.title, superCResults.price, superCResults.img, id)
+        }
+
+        const maxiResults = await maxiScraper(barcode, page)
+
+        console.log(maxiResults)
+
+        if (maxiResults != null) {
+            insertSuperC(maxiResults.title, maxiResults.price, maxiResults.img, id)
+        }
+
+        page.close()
     })
 
-    getPage().then(page => {
-        maxiScraper(barcode, page).then( result => {
-            console.log(result)
-            if (result != null) {
-                insertMaxi(result.title, result.price, result.img, id)
-            }
-        }).finally( () => { page.close() } )
-    })
+
+    
 
     
 
