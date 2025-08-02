@@ -2,14 +2,18 @@ import { getPage } from "./setupBrowser.mjs"
 import { maxiScraper } from "../helpers/maxiScraper.mjs";
 import { metroScraper } from "../helpers/metroScraper.mjs";
 import { supercScraper } from "./superCScraper.mjs";
-
+import { chromium } from "playwright";
 import {insertMaxi, insertSuperC, insertMetroDB } from "../helpers/db.mjs"
 
 const barcodeScraper = async (barcode, id) => {
 
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+
+
     const barcode12 = barcode.slice(1);
 
-    const metroPage = await getPage()
+    const metroPage = await context.newPage();
 
     const metroResults = await metroScraper(barcode12, metroPage)
 
@@ -26,7 +30,7 @@ const barcodeScraper = async (barcode, id) => {
 
     metroPage.close()
 
-    const superCPage = await getPage()
+    const superCPage = await context.newPage();
 
     const superCResults = await supercScraper(barcode12, superCPage)
 
@@ -43,7 +47,7 @@ const barcodeScraper = async (barcode, id) => {
 
     superCPage.close()
 
-    const maxiPage = await getPage()
+    const maxiPage = await context.newPage();
 
     const maxiResults = await maxiScraper(barcode, maxiPage)
 
@@ -61,6 +65,10 @@ const barcodeScraper = async (barcode, id) => {
     maxiPage.close()
 
     await context.clearCookies();
+
+    await context.close();
+
+    await browser.close();
     
 
 }
