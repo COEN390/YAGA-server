@@ -50,9 +50,13 @@ async function metroNameScrape(searchName) {
         .$eval('.head__unit-details', el => el.innerText.trim())
         .catch(() => 'No quantity');
 
-    const pricePerUnit = await product
+    let pricePerUnit = await product
         .$eval('.pricing__secondary-price', el => el.innerText.trim())
         .catch(() => 'No price per unit');
+
+        if (pricePerUnit !== "No price per unit") {
+        pricePerUnit = pricePerUnit.replace(/\s*\/\s*/, "/"); // Normalize: "$0.42 /100ml" → "$0.42/100ml"
+        }
 
     const brand = await product
         .$eval('.head__brand', el => el.innerText.trim())
