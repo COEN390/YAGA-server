@@ -9,7 +9,7 @@ const createDB = () => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       barcode TEXT Unique
     )`
-  );
+  )
 
   db.run(
     `CREATE TABLE IF NOT EXISTS maxi (

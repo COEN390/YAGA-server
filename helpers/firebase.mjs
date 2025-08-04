@@ -1,22 +1,21 @@
-import axios from "axios";
+import admin from "firebase-admin"
 
+const sendFCMMessage = async (title, body) => {
+  const message = {
+    notification: {
+      title: title,
+      body: body,
+    },
+    topic: "scan"
+  };
 
-const sendPushNotification = async (device, title, body) => {
-    const serverKey = "BLZoBfv1LZw7PxwF4msg0oC5V0HLbbJSybTKkjbngluEvjAW-9b4iOLM4WHBBhcip5DZw_JvfrjWU6hWeXx4Ohw";
-
-    const payload = {
-  to: "/topics/all", // 🔥 this is the broadcast target
-  notification: {
-    title: "Hello!",
-    body: "This is a global message."
-  },
-  priority: "high"
+  try {
+    const response = await admin.messaging().send(message);
+    console.log("FCM Response:", response);
+  } catch (error) {
+    console.error("Error sending FCM message:", error);
+  }
 };
 
-axios.post("https://fcm.googleapis.com/fcm/send", payload, {
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `key=${serverKey}`
-});
 
-}
+export { sendFCMMessage }

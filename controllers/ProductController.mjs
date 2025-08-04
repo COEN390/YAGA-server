@@ -7,6 +7,7 @@ import { supercScraper } from "../helpers/superCScraper.mjs";
 import { metroNameScrape } from "../helpers/metroNameScrape.mjs";
 import { createSearchResultsTable, clearNameSearchResults, insertNameSearchResult, getAllSearchResults } from "../helpers/searchResultsDB.mjs";
 import { barcodeScraper } from "../helpers/scraperRoutin.mjs";
+import { sendFCMMessage } from "../helpers/firebase.mjs";
 
 const getSearchResults = async (req, res) => {
   try {
@@ -17,6 +18,7 @@ const getSearchResults = async (req, res) => {
     return res.status(500).json({ error: "Could not retrieve search results" });
   }
 };
+
 
 const searchByName = async (req, res) => {
   const { searchTerm } = req.body;
@@ -92,8 +94,8 @@ const addProduct = async (req, res) => {
         return res.status(200).json({ message : 'barcode is already registered' })
     }   
 
-    barcodeScraper(barcode, id).then(() => {
-        console.log("scraping routin done")
+    barcodeScraper(barcode, id).then(result => {
+        sendFCMMessage("barcode search", result)
     })
 
     

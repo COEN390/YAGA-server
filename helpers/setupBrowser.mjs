@@ -2,7 +2,6 @@
 import { chromium } from 'playwright';
 
 
-
 async function getBrowser() {
 
   const browser = await chromium.launch({
