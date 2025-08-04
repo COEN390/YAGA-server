@@ -6,6 +6,18 @@ import { connection } from "./helpers/webSocket.mjs";
 import { createDB } from "./helpers/db.mjs";
 import { getBrowser } from "./helpers/setupBrowser.mjs";
 import { createSearchResultsTable } from "./helpers/searchResultsDB.mjs";
+import admin from "firebase-admin";
+
+//setup firebase
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import serviceAccount from  "./key.json"  assert { type: 'json' };;
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 const express_port = 3000

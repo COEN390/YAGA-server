@@ -9,6 +9,9 @@ const barcodeScraper = async (barcode, id) => {
 
     const { browser, context } = await getBrowser();
 
+    let result = {
+        barcode : barcode
+    }
     const barcode12 = barcode.slice(1);
 
     const metroPage = await context.newPage();
@@ -19,6 +22,7 @@ const barcodeScraper = async (barcode, id) => {
 
     if (metroResults != null) {
         insertMetroDB(metroResults.title, metroResults.price, metroResults.img, id)
+        result.metro = metroResults
     }
 
     await metroPage.evaluate(() => {
@@ -36,6 +40,7 @@ const barcodeScraper = async (barcode, id) => {
 
     if (superCResults != null) {
         insertSuperC(superCResults.title, superCResults.price, superCResults.img, id)
+        result.super_C = superCResults
     }
 
     await superCPage.evaluate(() => {
@@ -53,6 +58,7 @@ const barcodeScraper = async (barcode, id) => {
 
     if (maxiResults != null) {
         insertMaxi(maxiResults.title, maxiResults.price, maxiResults.img, id)
+        result.maxi = maxiResults
     }
 
     await maxiPage.evaluate(() => {
@@ -67,6 +73,8 @@ const barcodeScraper = async (barcode, id) => {
     await context.close();
 
     await browser.close();
+
+    return JSON.stringify(result);
     
 
 }
