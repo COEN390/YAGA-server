@@ -38,6 +38,10 @@ async function metroNameScrape(searchName) {
   for (let i = 0; i < Math.min(12, tiles.length); i++) {
     const product = tiles[i];
 
+    const barcode = await product
+      .evaluate(el => el.getAttribute('data-product-code'))
+      .catch(() => 'No barcode');
+
     const img = await product
       .$eval('img', img => img.getAttribute('src'))
       .catch(() => 'No image');
@@ -70,7 +74,7 @@ async function metroNameScrape(searchName) {
         .$eval('.pricing__before-price span', el => el.innerText.trim())
         .catch(() => 'No price'));
 
-    products.push({ title, price, img, quantity, brand, pricePerUnit });
+    products.push({ title, price, img, quantity, brand, pricePerUnit, barcode });
   }
 
   // Print the results, for testing purposes, uncomment if needed

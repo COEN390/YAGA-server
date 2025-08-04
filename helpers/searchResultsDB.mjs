@@ -26,6 +26,7 @@ const createSearchResultsTable = () => {
       quantity TEXT,
       brand TEXT,
       price_per_unit TEXT,
+      barcode TEXT,
       store TEXT,
       search_term TEXT,
       scraped_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -46,13 +47,13 @@ const clearNameSearchResults = () => {
 // Inserts a new product into the name_search_results table
 const insertNameSearchResult = (product, store, searchTerm) => {
   const db = getSearchDB();
-  const { title, price, img, quantity, brand, pricePerUnit } = product;
+  const { title, price, img, quantity, brand, pricePerUnit, barcode } = product;
 
   db.run(
     `INSERT INTO name_search_results 
-     (title, price, img_url, quantity, brand, price_per_unit, store, search_term) 
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [title, price, img, quantity, brand, pricePerUnit, store, searchTerm],
+     (title, price, img_url, quantity, brand, price_per_unit, barcode, store, search_term) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [title, price, img, quantity, brand, pricePerUnit, barcode, store, searchTerm],
     (err) => {
       if (err) console.error("❌ Insert failed:", err);
     }
