@@ -25,7 +25,9 @@ async function maxiScraper(barcode, page) {
     }
 
     for (const product of products) {
-        const img = await product.$eval("img", el => el.getAttribute("src"));
+        const img = await product
+            .$eval('picture.defaultable-picture img', img => img.getAttribute('src'))
+            .catch(() => 'No image');
         const title = await product.$eval("[data-testid='product-title']", el => el.innerText);
 
         let price = null;

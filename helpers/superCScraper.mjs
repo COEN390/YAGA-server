@@ -32,7 +32,7 @@ async function supercScraper(barcode, page) {
 
   // Extract the image source as a url
   const img = await product
-    .$eval('img', img => img.getAttribute('src'))
+    .$eval('picture.defaultable-picture img', img => img.getAttribute('src'))
     .catch(() => 'No image'); // If no image is found, return 'No image'
 
   // Extract the product title text
