@@ -43,8 +43,8 @@ async function metroNameScrape(searchName) {
       .catch(() => 'No barcode');
 
     const img = await product
-      .$eval('img', img => img.getAttribute('src'))
-      .catch(() => 'No image');
+      .$eval('picture.defaultable-picture img', img => img.getAttribute('src'))
+      .catch(() => 'No image'); // If no image is found, return 'No image'
 
     const title = await product
       .$eval('.head__title', el => el.innerText.trim())
