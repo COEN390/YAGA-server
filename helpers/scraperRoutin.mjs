@@ -21,7 +21,6 @@ const barcodeScraper = async (barcode, id) => {
 
     if (metroResults != null) {
         insertMetroDB(metroResults.title, metroResults.price, metroResults.img, id)
-        result.metro = metroResults
         stores.push = "metro";
     }
 
@@ -40,7 +39,6 @@ const barcodeScraper = async (barcode, id) => {
 
     if (superCResults != null) {
         insertSuperC(superCResults.title, superCResults.price, superCResults.img, id)
-        result.super_C = superCResults
         stores.push = "super C";
     }
 
@@ -59,7 +57,6 @@ const barcodeScraper = async (barcode, id) => {
 
     if (maxiResults != null) {
         insertMaxi(maxiResults.title, maxiResults.price, maxiResults.img, id)
-        result.maxi = maxiResults
         stores.push = "maxi"
     }
 
