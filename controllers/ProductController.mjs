@@ -73,17 +73,13 @@ const getProducts = async (req, res) => {
 
     const barcodes = await getAllBarcodesDB()
     
-    try{
       const mappedProducts = allProducts.map(d => {
         d.barcode = barcodes.find(b => b.id === d.barcode_id).barcode
         return d
       })
 
       return res.status(200).json({ products: mappedProducts })
-    }
-    catch(e) {
-      return res.status(200).json({ products: []})
-    }
+    
 }
 
 const addProduct = async (req, res) => {
