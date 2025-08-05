@@ -8,7 +8,7 @@ const barcodeScraper = async (barcode, id) => {
 
     const { browser, context } = await getBrowser();
 
-    let result = "Item with barcode " + barcode;
+    let result = "Item";
     let stores = [];
 
 
@@ -77,11 +77,11 @@ const barcodeScraper = async (barcode, id) => {
         result += " was found"
     }
     else if(metroPage != null || superCPage != null && maxiPage != null) {
-        result += "was not found"
+        result += " was not found"
     }
     else {
         str = arr.join(', ');
-        result +=  "was found at " + arr 
+        result +=  " was found at " + arr 
     }
 
     return result;
